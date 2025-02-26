@@ -1,0 +1,165 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}HomesWorth{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    {% block extra_css %}
+    {% endblock %}
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <header class="header">
+        <div class="container">
+            <!-- Logo and Website Name -->
+            <div class="logo-container">
+                <a href="{% url 'landing_page' %}">
+                    <img src="{% static 'images/HomeWorth.png' %}" alt="HomesWorth Logo" class="logo-img">
+                </a>
+                <h1 class="website-name">HomesWorth</h1>
+            </div>
+            
+            <!-- Navbar Links on the Extreme Right -->
+            <nav class="nav">
+                <ul>
+                    <li><a href="{% url 'landing_page' %}">Home</a></li>
+                    {% if user.is_authenticated %}
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <!-- Profile Dropdown -->
+                        <li class="profile-menu">
+                            <i class="fas fa-user-circle profile-icon"></i>
+                            <div class="dropdown">
+                                <a href="{% url 'user_profile_with_subscription' %}">View Profile</a>
+                                <a href="{% url 'subscribe' %}">Subscription</a>
+                                <a href="{% url 'logout' %}">Logout</a>
+                            </div>
+                        </li>
+                    {% else %}
+                        <li><a href="{% url 'login' %}">Login</a></li>
+                        <li><a href="{% url 'signup' %}">Signup</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Page-Specific Content -->
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="footer">
+        <p>&copy; 2025 HomesWorth. All Rights Reserved.</p>
+    </footer>
+
+    <style>
+        /* Header and Footer Shared Colors */
+        .header, .footer {
+            background-color: #343a40; /* Dark gray background */
+            color: #fff; /* White text color */
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+            border-bottom: 1px solid #444;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 10px 20px;
+            border-top: 1px solid #444;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-img {
+            height: 80px; /* Adjusted size for better visibility */
+            width: auto;
+            margin-right: 15px; /* Space between logo and website name */
+        }
+
+        .website-name {
+            font-size: 1.8rem; /* Adjusted size for better visibility */
+            color: #f2f7f8; /* Light blue color */
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .nav {
+            margin-left: auto; /* Pushes the navigation items to the extreme right */
+            display: flex;
+            align-items: center;
+        }
+
+        .nav ul {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav ul li {
+            margin-left: 280px; /* Adds more space between navigation items */
+        }
+
+        .nav ul li a {
+            text-decoration: none;
+            color: #f2f7f8; /* Matches the color of the HomesWorth heading */
+        }
+
+        .nav ul li a:hover {
+            color: #0c983b; /* Slightly darker shade for hover effect */
+        }
+
+        .profile-menu {
+            position: relative;
+        }
+
+        .dropdown {
+            display: none;
+            position: absolute;
+            top: 30px;
+            right: 0;
+            background: #0ba43c;
+            color: #333;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            min-width: 100px;
+            z-index: 1000;
+        }
+
+        .dropdown a {
+            display: block;
+            padding: 8px 12px;
+            color: #333;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+
+        .dropdown a:hover {
+            background-color: #f0f0f0;
+        }
+
+        .profile-menu:hover .dropdown {
+            display: block;
+        }
+    </style>
+
+</body>
+</html>

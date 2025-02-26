@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}House Details - House Price Prediction{% endblock %}
+
+{% block extra_css %}
+<style>
+    html, body {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    body {
+        background-image: url("{% static 'images/homelogin.jpg' %}");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+        color: #333;
+    }
+
+    .house-details-form {
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .house-details-form .form-group {
+        margin-bottom: 15px;
+    }
+
+    .house-details-form label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .house-details-form input,
+    .house-details-form select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+
+    .house-details-form button {
+        width: 100%;
+        padding: 10px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .house-details-form button:hover {
+        background-color: #218838;
+    }
+
+    .result-box {
+        max-width: 500px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #ffffffcc;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    .result-box h2 {
+        margin-bottom: 10px;
+        font-size: 1.5rem;
+        color: #28a745;
+    }
+
+    .result-box h3 {
+        font-size: 1.2rem;
+        color: #007bff;
+    }
+
+    .footer {
+        position: relative;
+        width: 100%;
+        padding: 10px 0;
+        background-color: #333;
+        color: white;
+        text-align: center;
+        margin-top: auto;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="house-details">
+    <div class="container">
+        <h2 style="text-align: center;">Enter House Details</h2>
+        <form method="POST" class="house-details-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="location">Preferred Location</label>
+                <select id="location" name="location">
+                    {% for loc in locations %}
+                        <option value="{{ loc }}" {% if entered_data.location == loc %}selected{% endif %}>
+                            {{ loc }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="area">Total Area (in sq.ft)</label>
+                <input type="number" id="area_in_sq_ft" name="area_in_sq_ft"
+                    placeholder="Enter total area you are looking for"
+                    value="{{ entered_data.area_in_sq_ft|default:'' }}" required>
+            </div>
+            <div class="form-group">
+                <label for="bedrooms">Number of Bedrooms</label>
+                <input type="number" id="bedrooms" name="bedrooms" placeholder="Enter number of bedrooms"
+                    value="{{ entered_data.bedrooms|default:'' }}" min="0" step="1" required>
+            </div>
+            <div class="form-group">
+                <label for="bathrooms">Number of Bathrooms</label>
+                <input type="number" id="bathrooms" name="bathrooms" placeholder="Enter number of bathrooms"
+                    value="{{ entered_data.bathrooms|default:'' }}" min="0" step="1" required>
+            </div>
+            <div class="form-group">
+                <label for="parking_slot">Parking Slot</label>
+                <input type="text" id="parking_slot" name="parking_slot"
+                    placeholder="Enter parking slot details"
+                    value="{{ entered_data.parking_slot|default:'' }}" min="0" step="1" required>
+            </div>
+            <div class="form-group">
+                <label for="age">Age of the Home (in years)</label>
+                <input type="number" id="age_of_home" name="age_of_home"
+                    placeholder="Enter age of the home"
+                    value="{{ entered_data.age_of_home|default:'' }}" min="0" step="1" required>
+            </div>
+            <button type="submit" class="btn">Predict Price</button>
+        </form>
+
+        {% if prediction %}
+        <div class="result-box">
+            <h2>Estimated Price: {{ prediction }}</h2>
+            <h3>{{ accuracy }}</h3>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

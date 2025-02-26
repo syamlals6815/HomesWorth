@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ user.username }}'s Profile{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        color: #333;
+        background: url('{% static "images/home_profile.jpg" %}') no-repeat center center fixed;
+        background-size: cover;
+    }
+
+    .profile-card {
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        max-width: 800px;
+        margin: 30px auto;
+    }
+
+    .popup {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+        z-index: 1000;
+        text-align: center;
+    }
+
+    .popup h3 {
+        margin-bottom: 15px;
+    }
+
+    .popup button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .popup-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+    }
+
+    .popup button:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+<body>
+    <main class="profile-card">
+        <section class="profile-header">
+            <h2>Hello, {{ user.username }}!</h2>
+            <p>Email: {{ user.email }}</p>
+            <p>Joined on: {{ user.date_joined|date:"F d, Y" }}</p>
+        </section>
+
+        <section class="subscription-info">
+            <h3>Subscription Details</h3>
+            <p><strong>Status:</strong> {{ user_type }}</p>
+            <p><strong>Available Credits:</strong> {{ credits }}</p>
+            {% if current_plan != "None" %}
+                <p><strong>Current Plan:</strong> {{ current_plan }}</p>
+            {% endif %}
+            {% if credits == 0 and user_type != "Subscribed User" %}
+                <p><em>You have used all your free credits. Please subscribe to continue.</em></p>
+            {% endif %}
+        </section>
+
+        <section class="subscription-plans">
+            <h3>Available Subscription Plans</h3>
+            <ul>
+                <li>Basic - 1 Month ( Rs. 99/- only )</li>
+                <li>Standard - 3 Months ( Rs. 199/- only )</li>
+                <li>Premium - 6 Months ( Rs. 299/- only )</li>
+                <li>Platinum - 1 Year ( Rs. 399/- only )</li>
+            </ul>
+            <a href="{% url 'subscribe' %}" class="btn btn-primary">Subscribe Now</a>
+        </section>
+
+        <section class="actions">
+            <h3>Actions</h3>
+            <div class="action-buttons">
+                <a href="{% url 'house_details' %}" class="btn btn-primary">House Details Form</a>
+            </div>
+        </section>
+
+        <section class="prediction-history">
+            <h3>Your Prediction History</h3>
+            <ul class="prediction-list">
+                {% for prediction in prediction_history %}
+                    <li>
+                        <p><strong>Location:</strong> {{ prediction.location }}</p>
+                        <p><strong>Estimated Price:</strong> ₹{{ prediction.estimated_price }}</p>
+                        <p><strong>Date:</strong> {{ prediction.prediction_date|date:"F d, Y" }}</p>
+                    </li>
+                {% empty %}
+                    <p>You have not made any predictions yet.</p>
+                {% endfor %}
+            </ul>
+        </section>
+    </main>
+
+    <!-- Popup -->
+    <div class="popup-overlay"></div>
+    <div class="popup">
+        <h3>Congrats, you got free 300 credits points!</h3>
+        <p>You can use 3 free trials. Click OK to redeem.</p>
+        <button id="popup-ok-button">OK</button>
+        <button id="popup-no-thanks-button">No thanks, go with subscription</button>
+    </div>
+
+    <script>
+        window.onload = function () {
+            // Correctly parse the Django variable as a JavaScript string
+            const showPopup = "{{ show_popup|yesno:'true,false' }}" === "true";
+
+            const popup = document.querySelector('.popup');
+            const overlay = document.querySelector('.popup-overlay');
+
+            if (showPopup) {
+                // Show popup if show_popup is true
+                popup.style.display = 'block';
+                overlay.style.display = 'block';
+            }
+
+            // Close popup on "OK" button click
+            document.getElementById('popup-ok-button').addEventListener('click', function () {
+                popup.style.display = 'none';
+                overlay.style.display = 'none';
+            });
+
+            // Redirect to subscribe.html on "No thanks, go with subscription" button click
+            document.getElementById('popup-no-thanks-button').addEventListener('click', function () {
+                window.location.href = "{% url 'subscribe' %}"; // Use Django's URL template tag for the correct URL
+            });
+        };
+    </script>
+</body>
+{% endblock %}

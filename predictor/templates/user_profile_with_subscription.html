@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Subscribed User Profile{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Container Styling */
+    .profile-container {
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay for better readability of text */
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Heading Styling */
+    .profile-container h2 {
+        font-size: 28px;
+        text-align: center;
+        color: white; /* Text color for better contrast */
+        margin-bottom: 20px;
+    }
+
+    /* Paragraph Styling */
+    .profile-container p {
+        font-size: 16px;
+        color: white; /* Text color for better contrast */
+        margin-bottom: 15px;
+        line-height: 1.6;
+    }
+
+    /* Link Styling */
+    .profile-container a {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 16px;
+        color: #fff;
+        background-color: #007bff;
+        text-decoration: none;
+        border-radius: 5px;
+        text-align: center;
+        margin-top: 20px;
+        transition: background-color 0.3s ease;
+    }
+
+    .profile-container a:hover {
+        background-color: #0056b3;
+    }
+
+    body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        margin: 0;
+    }
+
+    footer {
+        margin-top: auto;
+        width: 100%;
+        background-color: #333;
+        color: white;
+        text-align: center;
+        padding: 10px 0;
+    }
+
+    body {
+        background: url('{% static "images/background.jpg" %}') no-repeat center center fixed;
+        background-size: cover;
+        font-family: Arial, sans-serif;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <h2>Welcome, {{ user.username }}</h2> <!-- Display the username -->
+    <p><strong>Status:</strong> {{ subscription_status }}</p> <!-- Display subscription status -->
+    <p><strong>Plan:</strong> {{ current_plan }}</p> <!-- Display current plan -->
+    <p><strong>Subscription Expiry Date:</strong> {{ subscription_expiry }}</p> <!-- Display subscription expiry -->
+    <a href="{% url 'house_details' %}">Go to House Price Prediction</a>
+</div>
+{% endblock %}

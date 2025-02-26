@@ -1,0 +1,326 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Welcome to HomesWorth{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero" id="hero">
+    <div class="container">
+        <div class="hero-content">
+            <h2 class="single-line-heading">Accurately Predict House Prices</h2>
+            <p>Our cutting-edge tool uses advanced machine learning to help you estimate house prices with precision.</p>
+            
+            {% if user.is_authenticated %}
+                <a href="{% url 'house_details' %}" class="btn btn-primary">Get Started</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn-primary">Get Started</a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- About Section -->
+<section class="about" id="about">
+    <style>
+        .about {
+            background: url('https://example.com/background-image.jpg') no-repeat center center/cover;
+            padding: 50px 0;
+            font-family: 'Roboto', Arial, sans-serif;
+            color: #f5f5f5;
+        }
+
+        .about .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .about h2 {
+            font-size: 42px;
+            color: hsl(132, 99%, 28%);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .about p {
+            font-size: 18px;
+            color: #e0e0e0;
+            line-height: 1.8;
+            text-align: justify;
+            margin-bottom: 30px;
+        }
+
+        .about h3 {
+            font-size: 32px;
+            color: hsl(132, 99%, 28%);
+            margin-top: 30px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .about ul {
+            text-align: left;
+            margin: 0 auto;
+            display: inline-block;
+            padding-left: 20px;
+            font-size: 18px;
+            color: #e0e0e0;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .about ul li {
+            margin-bottom: 15px;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .about ul li::before {
+            content: '✔';
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: #76ff03;
+            font-size: 18px;
+        }
+
+        .about .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            font-size: 18px;
+            color: #000;
+            background-color: #ffeb3b;
+            text-transform: uppercase;
+            font-weight: bold;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .about .btn:hover {
+            background-color: hsl(132, 99%, 28%);
+        }
+    </style>
+
+    <div class="container">
+        <h2>About Our Tool</h2>
+        <p>
+            Welcome to the <strong>House Price Prediction Tool</strong>, a <strong>cutting-edge solution</strong> designed to assist real estate enthusiasts, buyers, and sellers in <strong>Kochi, Kerala</strong>. Our tool leverages advanced machine learning techniques, specifically <strong>linear regression</strong>, to provide <strong>instant and highly accurate price estimations</strong> for homes based on your unique requirements.
+        </p>
+        <p>
+            What sets us apart is our <strong>meticulously curated dataset</strong>, which encompasses detailed house information across various neighborhoods in Kochi. By analyzing key parameters such as <strong>location</strong>, <strong>square footage</strong>, <strong>number of bedrooms</strong>, <strong>bathrooms</strong>, <strong>parking slots</strong>, and more, our tool delivers a precise valuation of your dream home, saving you <strong>time</strong> and <strong>effort</strong>.
+        </p>
+
+        <h3>Why Choose Us?</h3>
+        <p>
+            Our tool offers <strong>instant calculations</strong>, ensuring you get results in seconds. It's <strong>user-friendly</strong>, <strong>highly reliable</strong>, and eliminates the guesswork involved in home pricing. Whether you're a <strong>buyer</strong> looking for the best deal, a <strong>seller</strong> aiming to price competitively, or an <strong>investor</strong> seeking insights, our tool is your trusted companion in the real estate market of Kochi.
+        </p>
+
+        <h3>Benefits for You</h3>
+        <ul>
+            <li>Make <strong>informed decisions</strong> with accurate price predictions.</li>
+            <li>Customize your search based on your <strong>specific needs</strong> and preferences.</li>
+            <li>Gain confidence in your transactions, backed by <strong>data-driven insights</strong>.</li>
+        </ul>
+
+        <!--<p>
+            Discover the <strong>true worth</strong> of your home and navigate the real estate market with ease, all at the click of a button.
+        </p>
+        <a href="#start" class="btn">Get Started</a>-->
+    </div>
+</section>
+
+
+
+<!-- Features Section -->
+<section class="features" id="features">
+    <div class="container">
+        <h2>Features</h2>
+        <div class="features-grid">
+            <div class="feature-item">
+                <img src="{% static 'images/location.jpg' %}" alt="Location">
+                <h3>Location-Based Analysis</h3>
+                <p>Get insights tailored to specific neighborhoods and cities.</p>
+            </div>
+            <div class="feature-item">
+                <img src="{% static 'images/data.jpg' %}" alt="Data">
+                <h3>Data-Driven Predictions</h3>
+                <p>Leverage large datasets to make informed decisions.</p>
+            </div>
+            <div class="feature-item">
+                <img src="{% static 'images/Accuracy.jpg' %}" alt="Accuracy">
+                <h3>Accuracy Analysis</h3>
+                <p>Providing an accurate percentage-based prediction.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section class="contact" id="contact">
+    <div class="container">
+        <h2>Need Any Help</h2>
+        <p>Have questions or need support? Reach out to us!</p>
+        <form action="#" method="POST" class="contact-form" id="helpForm">
+            {% csrf_token %}
+            <input type="text" name="name" placeholder="Your Name" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="tel" name="phone" placeholder="Contact Number" required pattern="[0-9]{10}" title="Enter a valid 10-digit phone number">
+            <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+            <button type="submit" class="btn">Send Message</button>
+        </form>
+    </div>
+</section>
+
+<script>
+    // Handle form submission and show dialog box
+    document.getElementById("helpForm").addEventListener("submit", function (event) {
+        event.preventDefault(); // Prevent default form submission
+        alert("Thanks for your Enquiry, Our executive will reach you out soon");
+        this.submit(); // Proceed with the form submission
+    });
+</script>
+
+
+
+<style>
+    /* Hero Section */
+    .hero {
+        position: relative;
+        height: 100vh; /* Full height of the viewport */
+        background: url('{% static "images/home.jpg" %}') no-repeat center center/cover; /* Image covers the whole section */
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        color: white; /* Text color for better contrast */
+    }
+
+    .hero-content {
+        text-align: center;
+        max-width: 700px;
+        padding: 10px;
+        background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay for better readability of text */
+        border-radius: 20px;
+    }
+
+    .hero h2 {
+        font-size: 2.5em;
+        font-weight: bold;
+    }
+
+    .hero p {
+        font-size: 1.2em;
+        margin: 10px 0;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        background-color: #007BFF; /* Bright blue button color */
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .btn:hover {
+        background-color: #0056b3; /* Darker blue on hover */
+    }
+
+    /* Single-line heading */
+    .single-line-heading {
+        font-family: 'Arial', sans-serif; /* Change font as needed */
+        font-size: 2.8em; /* Adjust size to fit content */
+        white-space: nowrap; /* Prevent wrapping to the next line */
+        overflow: hidden; /* Hide overflow if necessary */
+        text-align: center; /* Optional: Change alignment */
+    }
+
+    /* Contact Details Section */
+    .contact-details {
+        background-color: #f9f9f9; /* Light gray background for contrast */
+        padding: 40px 20px;
+        text-align: center;
+        border-top: 1px solid #ddd; /* Thin border for separation */
+    }
+
+    .contact-details-content {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .contact-details h2 {
+        font-size: 2.5em;
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+
+    .contact-details h3 {
+        font-size: 1.5em;
+        margin-top: 20px;
+    }
+
+    .contact-details p {
+        font-size: 1em;
+        line-height: 1.8;
+        margin: 5px 0;
+    }
+
+    /* Flexbox for horizontal layout */
+    .contact-details-grid {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 30px;
+        flex-wrap: wrap; /* Ensures responsiveness */
+    }
+
+    .contact-details-grid > div {
+        flex: 1;
+        min-width: 250px; /* Ensures minimum width for each section */
+    }
+
+    /* Hover effect for phone number and email */
+    .contact-info span:hover {
+        color: blue; /* Change color to blue on hover */
+        cursor: pointer; /* Show pointer to indicate interactivity */
+    }
+</style>
+
+<!-- Contact Details Section -->
+<section class="contact-details" id="contact-details">
+    <div class="container">
+        <div class="contact-details-content">
+            <h2>Find us</h2>
+            <div class="contact-details-grid">
+                <div class="address">
+                    <h3>Homes Worth Address</h3>
+                    <p>597, 2nd Floor</p>
+                    <p>10th Cross, Palarivattom</p>
+                    <p>Cochin, Kerala, India</p>
+                </div>
+                <div class="contact-info">
+                    <h3>Contact Us</h3>
+                    <p><strong>Call Us:</strong> <span>+91 9113806279</span></p>
+                    <p><strong>Mail Address:</strong> <span>homesworth2024@gmail.com</span></p>
+                </div>
+                <div class="open-hours">
+                    <h3>Open Hours</h3>
+                    <p><strong>Mon to Fri:</strong> 10:00 AM to 8:00 PM</p>
+                    <p><strong>Sat - Sun:</strong> 11:00 AM to 4:00 PM</p>
+                    <p><strong>Holidays:</strong> Closed</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

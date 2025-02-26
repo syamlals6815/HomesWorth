@@ -1,0 +1,224 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Free User Profile{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Base styling for the entire page */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+        color: white; /* Text color for better contrast */
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    h2, h3 {
+        color: #007BFF;
+        text-align: center;
+    }
+
+    p {
+        text-align: center;
+        font-size: 16px;
+    }
+
+    /* Wrapper for the main content */
+    .content-wrapper {
+        max-width: 800px;
+        margin: 30px auto;
+        background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay for better readability of text */
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        flex: 1; /* Allows the content to expand while keeping the footer at the bottom */
+    }
+
+    .actions {
+        margin-top: 30px;
+        text-align: center;
+    }
+
+    .action-buttons a {
+        display: inline-block;
+        margin: 10px;
+        padding: 12px 20px;
+        background-color: #007BFF;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+    .action-buttons a:hover {
+        background-color: #0056b3;
+    }
+
+    /* Popup styling */
+    .popup-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+    }
+
+    .popup {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        text-align: center;
+        max-width: 400px;
+        width: 90%;
+    }
+
+    .popup h3 {
+        margin-bottom: 20px;
+    }
+
+    .popup p {
+        font-size: 14px;
+        margin-bottom: 20px;
+        color: #555;
+    }
+
+    .popup button {
+        margin: 5px;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    #popup-ok-button, #limit-ok-button {
+        background-color: #007BFF;
+        color: white;
+    }
+
+    #popup-no-thanks-button, #limit-later-button {
+        background-color: #FF4C4C;
+        color: white;
+    }
+
+    #popup-ok-button:hover, #limit-ok-button:hover {
+        background-color: #0056b3;
+    }
+
+    #popup-no-thanks-button:hover, #limit-later-button:hover {
+        background-color: #cc0000;
+    }
+
+    /* Footer styling */
+    footer {
+        background-color: #f1f1f1;
+        text-align: center;
+        padding: 10px;
+        border-top: 1px solid #ccc;
+        margin-top: auto; /* Ensures footer stays at the bottom */
+    }
+
+    body {
+        background: url('{% static "images/bg.jpg" %}') no-repeat center center fixed;
+        background-size: cover;
+        font-family: Arial, sans-serif;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+    <h2>Welcome, {{ user.username }}</h2>
+    <p>Credits: {{ credits }}</p>
+    <p>Status: Free User</p>
+    <section class="actions">
+        <h3>Actions</h3>
+        <div class="action-buttons">
+            <a href="#" id="house-details-link" class="btn btn-primary">House Details Form</a>
+        </div>
+    </section>
+</div>
+
+<!-- Dynamic popup -->
+<div class="popup-overlay" id="popup-overlay"></div>
+<div class="popup" id="popup">
+    <h3 id="popup-title"></h3>
+    <p id="popup-message"></p>
+    <button id="popup-ok-button">OK</button>
+    <button id="popup-no-thanks-button">Subscribe</button>
+</div>
+
+<script>
+    window.onload = function () {
+        const showPopup = "{{ show_popup|yesno:'true,false' }}" === "true";
+        const popupTitle = "{{ popup_title }}";
+        const popupMessage = "{{ popup_message }}";
+        const remainingCredits = parseInt("{{ credits }}");
+
+        const popup = document.getElementById('popup');
+        const overlay = document.getElementById('popup-overlay');
+        const titleElement = document.getElementById('popup-title');
+        const messageElement = document.getElementById('popup-message');
+        const houseDetailsLink = document.getElementById('house-details-link');
+
+        if (showPopup) {
+            titleElement.innerText = popupTitle;
+            messageElement.innerText = popupMessage;
+            popup.style.display = 'block';
+            overlay.style.display = 'block';
+
+            document.getElementById('popup-ok-button').addEventListener('click', function () {
+                fetch("", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "X-CSRFToken": "{{ csrf_token }}"
+                    },
+                    body: new URLSearchParams({ access_form: "1" })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "success") {
+                        alert("Trial used successfully. Remaining credits: " + data.credits);
+                        popup.style.display = 'none';
+                        overlay.style.display = 'none';
+                        houseDetailsLink.style.pointerEvents = "auto"; // Enable form access
+                    } else if (data.status === "exceeded_limit") {
+                        alert(data.message);
+                        window.location.href = "{% url 'subscribe' %}";
+                    }
+                });
+            });
+
+            document.getElementById('popup-no-thanks-button').addEventListener('click', function () {
+                window.location.href = "{% url 'subscribe' %}";
+            });
+        }
+
+        houseDetailsLink.addEventListener('click', function (event) {
+            event.preventDefault();
+            if (remainingCredits <= 0) {
+                alert('Your credits have expired. Please subscribe to continue.');
+                window.location.href = "{% url 'subscribe' %}";
+            } else {
+                window.location.href = "{% url 'house_details' %}";
+            }
+        });
+    };
+</script>
+
+{% endblock %}

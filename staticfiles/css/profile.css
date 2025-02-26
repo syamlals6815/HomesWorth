@@ -1,0 +1,79 @@
+/* Styles for profile page */
+
+/* Set a background image for the profile page */
+body {
+    background-image: url("{% static 'images/home_profile.jpg' %}");
+    
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    height: 100vh;
+    color: #fff;
+}
+
+/* Specific styles for the profile page */
+.profile-card {
+    margin-top: 100px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.9); /* Overlay for content contrast */
+    border-radius: 8px;
+    color: #333;
+}
+
+.profile-card {
+    width: 90%;
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.profile-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.profile-header h2 {
+    margin-bottom: 10px;
+}
+.profile-header h2,
+.subscription-info h3,
+.prediction-history h3 {
+    color: #333; /* Dark text color */
+}
+
+
+.subscription-info,
+.prediction-history {
+    margin-bottom: 40px;
+}
+
+h3 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+ul.prediction-list {
+    list-style: none;
+    padding: 0;
+}
+
+ul.prediction-list li {
+    margin-bottom: 15px;
+}
+
+.btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.btn:hover {
+    background-color: #45a049;
+}
